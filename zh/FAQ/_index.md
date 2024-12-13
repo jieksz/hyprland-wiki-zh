@@ -44,9 +44,8 @@ Requested display configuration exceeds system DDB limitations
 
 **方法 1:** _只_使用外部显示器
 
-By using `AQ_DRM_DEVICES=/dev/dri/card1` (or `card0`) environment variable you can force Hyprland to
-use only your dGPU, meaning your laptop's screen will be gone but your external
-one will work.
+通过使用 `AQ_DRM_DEVICES=/dev/dri/card1` (或 `card0`) 环境变量你可以强制 Hyprland
+只使用你的 dGPU, 这意味着你的笔记本电脑的屏幕将消失, 但你的外部屏幕可以工作.
 
 **方法 2:** 使用所有输出, 以电池寿命为代价.
 
