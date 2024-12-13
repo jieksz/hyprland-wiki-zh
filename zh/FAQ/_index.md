@@ -66,7 +66,7 @@ _请注意, 这些是高度取决于机型的, 可能会也可能不会奏效. �
 考虑使用 [`wl-clipboard`](https://github.com/bugaevc/wl-clipboard) 中的 `wl-copy`.
 这是绑定示例:
 `bind = , Print, exec, grim -g "$(slurp -d)" - | wl-copy` 为了获得更完整的实用程序, 
-尝试我门自己的截图工具:
+尝试我们自己的截图工具:
 [Grimblast](https://github.com/hyprwm/contrib).
 
 **方法 2:** 你也可以使用 hyprshot, [更多信息](https://github.com/Gustash/Hyprshot).
