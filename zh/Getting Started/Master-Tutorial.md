@@ -111,10 +111,10 @@ Wayland / Hyprland / other 应用正常工作的关键因素.
 ## 光标
 
 当你不知道如何设置光标时，设置光标是一种痛苦. 查看
-[查看FAQ](../../FAQ#how-do-i-change-me-mouse-cursor)
+[查看FAQ](../../FAQ#如何更改我的光标)
 
 如果你的鼠标没有出现, 查看
-[查看FAQ](../../FAQ#me-cursor-no-render)
+[查看FAQ](../../FAQ#我的光标未渲染)
 
 ## 主题
 

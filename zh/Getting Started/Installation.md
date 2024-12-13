@@ -91,7 +91,7 @@ sudo zypper in hyprland
 sudo zypper in hyprland-devel
 ```
 
-或者, 跟随如下说明["手册(手动构建)"](#manual-manual-build)来自行构建Hyprland.
+或者, 跟随如下说明["手册(手动构建)"](#手册-手动构建手册)来自行构建Hyprland.
 
 注意: _Hyprland不适用于Leap, 因为Hyprland需要的大多数库(和编译器)都太老了._
 
@@ -126,7 +126,7 @@ sudo apt install hyprland
 注意: 即使Hyprland 以被纳入 trixie 仓库, 仍推荐从 SID 安装, 因为 trixie 仓库中某些依赖已过时.
 
 或者, 你也可以按照
-["手册 (手动构建)"](#manual-manual-build) 来自行构建Hyprland.
+["手册 (手动构建)"](#手册-手动构建) 来自行构建Hyprland.
 
 {{< callout type=info >}}
 
@@ -548,8 +548,8 @@ virt-viewer --attach hypr-vm
 ```
 
 最后, 请按照上述说明进行以下任一操作
-[从 aur 安装 hyprland-git](#installation) 或
-[手动构建](#manual-manual-build).
+[从 aur 安装 hyprland-git](#安装) 或
+[手动构建](#手册-手动构建).
 {{< callout >}}
 
 确保你安装了 `mesa` 作为 OpenGL 驱动. virgl 驱动以包含在 `mesa`.
