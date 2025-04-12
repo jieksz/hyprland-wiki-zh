@@ -28,10 +28,18 @@ Arch, NixOS和openSUSE滚动发行版有很好的支持. 对于其他发行版(�
 
 ## 安装
 
-安装Hyprland很简单.只需用你的包管理器就能安装(如果可用)亦或自行安装/构建.
+安装Hyprland很简单.只需用你的包管理器就能安装.
 
-{{< callout >}}
-这个项目还在开发中并且不断变化. 如果你想了解最新变动,请考虑用`yay -Syu --devel`更新你的包,或其它你喜欢的包管理器
+{{< callout type=warning>}}
+
+**强烈**建议你使用**发行版软件包**, **而非**手动编译或使用 `-git` 包.
+Hyprland的生态系统和依赖经常改变, 手动编译只会让你接触到过时的东西,
+或依赖项的不兼容版本.
+
+如果你得到 `.so` 文件不匹配或丢失错误,这 _完全是你的错!_
+
+总之,如果你是经验丰富的用户,想要测试新功能,非常欢迎您使用最新git head.
+不过请不要再问有关".so 文件丢失"
 
 {{< /callout >}}
 
@@ -41,24 +49,24 @@ Arch, NixOS和openSUSE滚动发行版有很好的支持. 对于其他发行版(�
 
 {{% details title="Arch" closed="true" %}}
 
-从编译安装最新源代码的AUR安装:
-
-```shell
-yay -S hyprland-git
-```
-
-或者arch软件包的标记版本:
+从arch软件包中安装标记版本:
 
 ```shell
 sudo pacman -S hyprland
 ```
 
-或者，安装"hyprland meta"包，以自动获取和编译hypr*生态系统中所有组件的最新git版本.
+或者从AUR中安装,它编译了最新源代码:
+
+```shell
+yay -S hyprland-git
+```
+
+或者，安装 `hyprland-meta` 包，以自动获取和编译hypr*生态系统中所有组件的最新git版本.
 
 ```shell
 yay -S hyprland-meta-git
 ```
-如果你选择使用AUR中的`git`版本, 你可以使用 [Chaotic Aur](https://aur.chaotic.cx/)获取预构建的二进制文件.
+如果你选择使用AUR中的 `git` 版本, 你可以使用 [Chaotic Aur](https://aur.chaotic.cx/)获取预构建的二进制文件.
 
 如果出现错误你可以使用[downgrade](https://github.com/archlinux-downgrade/downgrade)来降级.
 
@@ -85,7 +93,7 @@ sudo zypper in hyprland
 ```
 或者通过YaST2软件安装"hyprland"包.
 
-为了使`hyprpm`识别其依赖关系, 你还需要安装 `hyprland-devel`:
+为了使 `hyprpm` 识别其依赖关系, 你还需要安装 `hyprland-devel`:
 
 ```sh
 sudo zypper in hyprland-devel
@@ -99,7 +107,7 @@ sudo zypper in hyprland-devel
 
 {{% details title="Fedora*" closed="true" %}}
 
-在 Fedora 39+, 运行:
+在 Fedora 40+, 运行:
 
 ```sh
 sudo dnf install hyprland
@@ -196,7 +204,7 @@ sudo add-apt-repository universe && sudo apt-get update && sudo apt-get install 
 从 Source 中安装 Hyprland, 首先安装以下依赖:
 
 ```bash
-sudo apt-get install -y meson wget build-essential ninja-build cmake-extras cmake gettext gettext-base fontconfig libfontconfig-dev libffi-dev libxml2-dev libdrm-dev libxkbcommon-x11-dev libxkbregistry-dev libxkbcommon-dev libpixman-1-dev libudev-dev libseat-dev seatd libxcb-dri3-dev libegl-dev libgles2 libegl1-mesa-dev glslang-tools libinput-bin libinput-dev libxcb-composite0-dev libavutil-dev libavcodec-dev libavformat-dev libxcb-ewmh2 libxcb-ewmh-dev libxcb-present-dev libxcb-icccm4-dev libxcb-render-util0-dev libxcb-res0-dev libxcb-xinput-dev libtomlplusplus3
+sudo apt install -y meson wget build-essential ninja-build cmake-extras cmake gettext gettext-base fontconfig libfontconfig-dev libffi-dev libxml2-dev libdrm-dev libxkbcommon-x11-dev libxkbregistry-dev libxkbcommon-dev libpixman-1-dev libudev-dev libseat-dev seatd libxcb-dri3-dev libegl-dev libgles2 libegl1-mesa-dev glslang-tools libinput-bin libinput-dev libxcb-composite0-dev libavutil-dev libavcodec-dev libavformat-dev libxcb-ewmh2 libxcb-ewmh-dev libxcb-present-dev libxcb-icccm4-dev libxcb-render-util0-dev libxcb-res0-dev libxcb-xinput-dev libtomlplusplus3 libre2-dev
 ```
 
 你还需要从 Source 构建最新 wayland, wayland-protocols, 和
@@ -205,7 +213,7 @@ libdisplay-info 的标记版本.
 你也可以安装 `xdg-desktop-portal-wlr` 或 `xdg-desktop-portal-hyprland` , 用于屏幕共享
 
 ```bash
-sudo apt-get install -y xdg-desktop-portal-wlr
+sudo apt install -y xdg-desktop-portal-wlr
 ```
 
 _不幸的是, `xdg-desktop-portal-hyprland` 仍未纳入 Ubuntu 仓库 所以你必须从 source 中构建它_
@@ -239,9 +247,9 @@ _不幸的是, `xdg-desktop-portal-hyprland` 仍未纳入 Ubuntu 仓库 所以�
 {{% details title="Void Linux*" closed="true" %}}
 
 Hyprland 不适用于 Void Linux's 官方仓库
-[由于包装理念的冲突](https://github.com/void-linux/void-packages/issues/37544).
-但是, [第三方仓库](https://github.com/Makrennel/hyprland-void)
-可以使用 GitHub Actions 在 CI 中构建的
+由于void开发者并不喜欢我们的主要开发人员
+不过, [第三方仓库](https://github.com/Makrennel/hyprland-void)
+有可以使用的
 [二进制包](https://github.com/Makrennel/hyprland-void/tree/repository-x86_64-glibc)
 .
 
@@ -284,15 +292,9 @@ hyprland-bin (SlackBuilds) - Slackware的预构建版本以准备好安装
 
 {{% details title="Alpine*" closed="true" %}}
 
-Hyprland在 Alpine [测试仓库](https://wiki.alpinelinux.org/wiki/Repositories#Testing) 中可用, 通过添加以下内容在 `/etc/apk/repositories` 中启用
+Hyprland当前在Alpine的[社区仓库](https://wiki.alpinelinux.org/wiki/Repositories#Community)是可用的同时它是由社区维护.
 
-```plain {filename="/etc/apk/repositories"}
-http://dl-cdn.alpinelinux.org/alpine/edge/testing
-```
-
-这仅适用于 Alpine linux edge, 不适用于任何稳定版本. 如需在稳定版本上使用, 请参阅 [Alpine wiki](https://wiki.alpinelinux.org/wiki/Repositories#Using_the_testing_repository_on_stable_branches)
-
-在启用仓库之后, 以下命令将安装 hyprland 及其依赖.
+以下命令将安装 hyprland 及其依赖.
 
 
 ```plain
@@ -339,19 +341,7 @@ sudo eopkg install hyprland
 
 _**\* 非官方, 没有官方支持提供. 这些说明由社区驱动, 并且不保证其有效性.**_
 
-### 手册 (Releases, 仅Linux)
-
-1. 下载最新 release.
-2. 复制二进制文件 (Hyprland, hyprctl, hyprpm) 到 `/usr/bin/`.
-3. 复制 desktop entry (`example/hyprland.desktop`) 到
-   `/usr/share/wayland-sessions/`
-
-示例配置在 `example/hyprland.conf`.
-
-为了以后更新, 你可以覆盖二进制文件 (Hyprland, hyprctl,
-hyprpm) . 你不需要更新其他任何内容.
-
-### 手册 (手动构建)
+### 手册
 
 依赖:
 
@@ -364,7 +354,7 @@ hyprpm) . 你不需要更新其他任何内容.
 {{% details title="Arch" closed="true" %}}
 
 ```plain
-yay -S ninja gcc cmake meson libxcb xcb-proto xcb-util xcb-util-keysyms libxfixes libx11 libxcomposite libxrender pixman wayland-protocols cairo pango seatd libxkbcommon xcb-util-wm xorg-xwayland libinput libliftoff libdisplay-info cpio tomlplusplus hyprlang-git hyprcursor-git hyprwayland-scanner-git xcb-util-errors hyprutils-git hyprgraphics-git
+yay -S ninja gcc cmake meson libxcb xcb-proto xcb-util xcb-util-keysyms libxfixes libx11 libxcomposite libxrender libxcursor pixman wayland-protocols cairo pango libxkbcommon xcb-util-wm xorg-xwayland libinput libliftoff libdisplay-info cpio tomlplusplus hyprlang-git hyprcursor-git hyprwayland-scanner-git xcb-util-errors hyprutils-git glaze hyprgraphics-git aquamarine-git re2 hyprland-qtutils
 ```
 
 _(如果列表中缺少任何包, 请提交一个pr或打开issue)_
@@ -429,6 +419,7 @@ ninja -C build
 ninja -C build install --tags runtime,man
 ```
 
+自定义构建标志可以找到[`meson_options.txt`](https://github.com/hyprwm/Hyprland/blob/main/meson_options.txt).
 请参考 [调试](../../Contributing-and-Debugging) 以了解如何构建和调试.
 
 ## 启动时奔溃
@@ -462,18 +453,20 @@ make <PRESET> && sudo cp ./build/Hyprland /usr/bin && sudo cp ./example/hyprland
 
 为应用自定义构建标志 你必须要放弃make.
 
-以支持的自定义构建标志:
+在CMake中支持的自定义构建标志:
 
 ```bash
 LEGACY_RENDERER - 编译带有旧版渲染器 (见上文)
 NO_XWAYLAND - 移除 XWayland 支持
 NO_SYSTEMD - 移除 systemd 依赖
+NO_UWSM - 不安装hyprland-uwsm.desktop文件
+NO_HYPRPM - 不构建并安装hyprpm
 ```
 
 标志可以这样传递给CMake:
 
 ```bash
-cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -D<FLAG>:STRING=true -B build -G Ninja
+cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -D<FLAG>:STRING=true -B build
 ```
 
 将 `<FLAG>` 更改为自定义构建标志之一. 可同时使用多个标志, 通过添加更多 `-D<FLAG_2>:STRING=true`.
@@ -483,7 +476,7 @@ cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -D<FLAG>:STRING=tru
 构建, 运行:
 
 ```bash
-cmake --build ./build --config Release --target all
+cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
 ```
 
 如果在 `Debug` 中配置, 也修改 `--config` 为 `Debug` .
