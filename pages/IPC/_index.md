@@ -35,6 +35,7 @@ e.g.: `workspace>>2`
 | workspace | emitted on workspace change. Is emitted ONLY when a user requests a workspace change, and is not emitted on mouse movements (see `focusedmon`) | `WORKSPACENAME` |
 | workspacev2 | emitted on workspace change. Is emitted ONLY when a user requests a workspace change, and is not emitted on mouse movements (see `focusedmon`) | `WORKSPACEID,WORKSPACENAME` |
 | focusedmon | emitted on the active monitor being changed. | `MONNAME,WORKSPACENAME` |
+| focusedmonv2 | emitted on the active monitor being changed. | `MONNAME,WORKSPACEID` |
 | activewindow | emitted on the active window being changed. | `WINDOWCLASS,WINDOWTITLE` |
 | activewindowv2 | emitted on the active window being changed. | `WINDOWADDRESS` |
 | fullscreen | emitted when a fullscreen status of a window changes. | `0/1` (exit fullscreen / enter fullscreen) |
@@ -49,6 +50,7 @@ e.g.: `workspace>>2`
 | moveworkspacev2 | emitted when a workspace is moved to a different monitor | `WORKSPACEID,WORKSPACENAME,MONNAME` |
 | renameworkspace | emitted when a workspace is renamed | `WORKSPACEID,NEWNAME` |
 | activespecial | emitted when the special workspace opened in a monitor changes (closing results in an empty `WORKSPACENAME`) | `WORKSPACENAME,MONNAME` |
+| activespecialv2 | emitted when the special workspace opened in a monitor changes (closing results in empty `WORKSPACEID` and `WORKSPACENAME` values) | `WORKSPACEID,WORKSPACENAME,MONNAME` |
 | activelayout | emitted on a layout change of the active keyboard | `KEYBOARDNAME,LAYOUTNAME` |
 | openwindow | emitted when a window is opened | `WINDOWADDRESS`,`WORKSPACENAME`,`WINDOWCLASS`,`WINDOWTITLE` |
 | closewindow | emitted when a window is closed | `WINDOWADDRESS` |
@@ -69,6 +71,7 @@ e.g.: `workspace>>2`
 | lockgroups | emitted when `lockgroups` is toggled. | `0/1` |
 | configreloaded | emitted when the config is done reloading | empty |
 | pin | emitted when a window is pinned or unpinned | `WINDOWADDRESS,PINSTATE` |
+| minimized | emitted when an external taskbar-like app requests a window to be minimized | `WINDOWADDRESS,0/1` |
 
 {{< callout type=warning >}}
 

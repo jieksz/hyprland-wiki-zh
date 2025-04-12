@@ -108,6 +108,7 @@ Doing `general:snap {` is **invalid**!
 | name | description | type | default |
 | --- | --- | --- | --- |
 | rounding | rounded corners' radius (in layout px) | int | 0 |
+| rounding_power | adjusts the curve used for rounding corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle. [2.0 - 10.0] | float | 2.0 |
 | active_opacity | opacity of active windows. [0.0 - 1.0] | float | 1.0 |
 | inactive_opacity | opacity of inactive windows. [0.0 - 1.0] | float | 1.0 |
 | fullscreen_opacity | opacity of fullscreen windows. [0.0 - 1.0] | float | 1.0 |
@@ -116,6 +117,7 @@ Doing `general:snap {` is **invalid**!
 | dim_special | how much to dim the rest of the screen by when a special workspace is open. [0.0 - 1.0] | float | 0.2 |
 | dim_around | how much the `dimaround` window rule should dim by. [0.0 - 1.0] | float | 0.4 |
 | screen_shader | a path to a custom shader to be applied at the end of rendering. See `examples/screenShader.frag` for an example. | str | \[\[Empty\]\] |
+| border_part_of_window | whether the window border should be a part of the window | bool | true |
 
 #### Blur
 
@@ -204,6 +206,7 @@ _[More about Animations](../Animations)._
 | scroll_factor | Multiplier added to scroll movement for external mice. Note that there is a separate setting for [touchpad scroll_factor](#touchpad).  | float | 1.0 |
 | natural_scroll | Inverts scrolling direction. When enabled, scrolling moves content directly, rather than manipulating a scrollbar. | bool | false |
 | follow_mouse | Specify if and how cursor movement should affect window focus. See the note below. [0/1/2/3] | int | 1 |
+| follow_mouse_threshold | The smallest distance in logical pixels the mouse needs to travel for the window under it to get focused. Works only with follow_mouse = 1. | float | 0.0 |
 | focus_on_close | Controls the window focus behavior when a window is closed. When set to 0, focus will shift to the next window candidate. When set to 1, focus will shift to the window under the cursor. [0/1] | int | 0 |
 | mouse_refocus | If disabled, mouse focus won't switch to the hovered window unless the mouse crosses a window boundary when `follow_mouse=1`. | bool | true |
 | float_switch_override_focus | If enabled (1 or 2), focus will change to the window under the cursor when changing from tiled-to-floating and vice versa. If 2, focus will also follow mouse on float-to-float switches. | int | 1 |
@@ -276,6 +279,8 @@ _Subcategory `input:touchpad:`_
 | tap-to-click | Tapping on the touchpad with 1, 2, or 3 fingers will send LMB, RMB, and MMB respectively. | bool | true |
 | drag_lock | When enabled, lifting the finger off for a short time while dragging will not drop the dragged item. [libinput#tap-and-drag](https://wayland.freedesktop.org/libinput/doc/latest/tapping.html#tap-and-drag) | bool | false |
 | tap-and-drag | Sets the tap and drag mode for the touchpad | bool | true |
+| flip_x | inverts the horizontal movement of the touchpad | bool | false |
+| flip_y | inverts the vertical movement of the touchpad | bool | false |
 
 #### Touchdevice
 
@@ -283,7 +288,7 @@ _Subcategory `input:touchdevice:`_
 
 | name | description | type | default |
 | --- | --- | --- | --- |
-| transform | Transform the input from touchdevices. The possible transformations are the same as [those of the monitors](../Monitors/#rotating) | int | 0 |
+| transform | Transform the input from touchdevices. The possible transformations are the same as [those of the monitors](../Monitors/#rotating). `-1` means it's unset. | int | -1 |
 | output | The monitor to bind touch devices. The default is auto-detection. To stop auto-detection, use an empty string or the "\[\[Empty\]\]" value. | string | \[\[Auto\]\] |
 | enabled | Whether input is enabled for touch devices. | bool | true |
 
@@ -293,7 +298,7 @@ _Subcategory `input:tablet:`_
 
 | name | description | type | default |
 | --- | --- | --- | --- |
-| transform | transform the input from tablets. The possible transformations are the same as [those of the monitors](../Monitors/#rotating) | int | 0 |
+| transform | transform the input from tablets. The possible transformations are the same as [those of the monitors](../Monitors/#rotating). `-1` means it's unset. | int | -1 |
 | output | the monitor to bind tablets. Can be `current` or a monitor name. Leave empty to map across all monitors. | string | \[\[Empty\]\] |
 | region_position | position of the mapped region in monitor layout relative to the top left corner of the bound monitor or all monitors. | vec2 | [0, 0] |
 | absolute_region_position | whether to treat the `region_position` as an absolute position in monitor layout. Only applies when `output` is empty. | bool | false |
@@ -352,17 +357,26 @@ _Subcategory `group:groupbar:`_
 | enabled | enables groupbars | bool | true |
 | font_family | font used to display groupbar titles, use `misc:font_family` if not specified | string | [\[Empty]] |
 | font_size | font size of groupbar title | int | 8 |
-| gradients | enables gradients | bool | true |
+| gradients | enables gradients | bool | false |
 | height | height of the groupbar | int | 14 |
+| indicator_height | height of the groupbar indicator | int | 3 |
 | stacked | render the groupbar as a vertical stack | bool | false |
 | priority | sets the decoration priority for groupbars | int | 3 |
 | render_titles | whether to render titles in the group bar decoration | bool | true |
+| text_offset | adjust vertical position for titles | int | 0 |
 | scrolling | whether scrolling in the groupbar changes group active window | bool | true |
+| rounding | how much to round the indicator | int | 1 |
+| gradient_rounding | how much to round the gradients | int | 2 |
+| round_only_edges | round only the indicator edges of the entire groupbar | bool | true |
+| gradient_round_only_edges | round only the gradient edges of the entire groupbar | bool | true |
 | text_color | controls the group bar text color | color | 0xffffffff |
 | col.active | active group bar background color | gradient | 0x66ffff00 |
 | col.inactive | inactive (out of focus) group bar background color | gradient | 0x66777700 |
 | col.locked_active | active locked group bar background color | gradient | 0x66ff5500 |
 | col.locked_inactive | inactive locked group bar background color | gradient | 0x66775500 |
+| gaps_in | gap size between gradients | int | 2 |
+| gaps_out | gap size between gradients and window | int | 2 |
+| keep_upper_gap | add or remove upper gap | bool | true |
 
 ### Misc
 
@@ -401,6 +415,8 @@ _Subcategory `group:groupbar:`_
 | disable_xdg_env_checks | disable the warning if XDG environment is externally managed | bool | false |
 | disable_hyprland_qtutils_check | disable the warning if hyprland-qtutils is not installed | bool | false |
 | lockdead_screen_delay | the delay in ms after the lockdead screen appears if the lock screen did not appear after a lock event occurred | int | 1000 |
+| enable_anr_dialog | whether to enable the ANR (app not responding) dialog when your apps hang | bool | true |
+| anr_missed_pings | number of missed pings before showing the ANR dialog | int | 1 |
 
 ### Binds
 
@@ -409,11 +425,13 @@ _Subcategory `group:groupbar:`_
 | pass_mouse_when_bound | if disabled, will not pass the mouse events to apps / dragging windows around if a keybind has been triggered. | bool | false |
 | scroll_event_delay | in ms, how many ms to wait after a scroll event to allow passing another one for the binds. | int | 300 |
 | workspace_back_and_forth | If enabled, an attempt to switch to the currently focused workspace will instead switch to the previous workspace. Akin to i3's _auto_back_and_forth_. | bool | false |
+| hide_special_on_workspace_change | If enabled, changing the active workspace (including to itself) will hide the special workspace on the monitor where the newly active workspace resides. | bool | false |
 | allow_workspace_cycles | If enabled, workspaces don't forget their previous workspace, so cycles can be created by switching to the first workspace in a sequence, then endlessly going to the previous workspace. | bool | false |
 | workspace_center_on | Whether switching workspaces should center the cursor on the workspace (0) or on the last active window for that workspace (1) | int | 0 |
 | focus_preferred_method | sets the preferred focus finding method when using `focuswindow`/`movewindow`/etc with a direction. 0 - history (recent have priority), 1 - length (longer shared edges have priority) | int | 0 |
 | ignore_group_lock | If enabled, dispatchers like `moveintogroup`, `moveoutofgroup` and `movewindoworgroup` will ignore lock per group. | bool | false |
-| movefocus_cycles_fullscreen | If enabled, when on a fullscreen window, `movefocus` will cycle fullscreen, if not, it will move the focus in a direction. | bool | true |
+| movefocus_cycles_fullscreen | If enabled, when on a fullscreen window, `movefocus` will cycle fullscreen, if not, it will move the focus in a direction. | bool | false |
+| movefocus_cycles_groupfirst | If enabled, when in a grouped window, movefocus will cycle windows in the groups first, then at each ends of tabs, it'll move on to other windows/groups | bool | false |
 | disable_keybind_grabbing | If enabled, apps that request keybinds to be disabled (e.g. VMs) will not be able to do so. | bool | false |
 | window_direction_monitor_fallback | If enabled, moving a window or focus over the edge of a monitor with a direction will move it to the next monitor in that direction. | bool | true |
 | allow_pin_fullscreen | If enabled, Allow fullscreen to pinned windows, and restore their pinned status afterwards | bool | false |
@@ -425,13 +443,13 @@ _Subcategory `group:groupbar:`_
 | enabled | allow running applications using X11 | bool | true |
 | use_nearest_neighbor | uses the nearest neighbor filtering for xwayland apps, making them pixelated rather than blurry | bool | true |
 | force_zero_scaling | forces a scale of 1 on xwayland windows on scaled displays. | bool | false |
+| create_abstract_socket | Create the [abstract Unix domain socket](../XWayland/#abstract-unix-domain-socket) for XWayland connections. (XWayland restart is required for changes to take effect; Linux only) | bool | false |
 
 ### OpenGL
 
 | name | description | type | default |
 | --- | --- | --- | --- |
 | nvidia_anti_flicker | reduces flickering on nvidia at the cost of possible frame drops on lower-end GPUs. On non-nvidia, this is ignored. | bool | true |
-| force_introspection | forces introspection at all times. Introspection is aimed at reducing GPU usage in certain cases, but might cause graphical glitches on nvidia. 0 - nothing, 1 - force always on, 2 - force always on if nvidia | int | 2 |
 
 ### Render
 
@@ -439,35 +457,66 @@ _Subcategory `group:groupbar:`_
 | --- | --- | --- | --- |
 | explicit_sync | Whether to enable explicit sync support. Requires a hyprland restart. 0 - no, 1 - yes, 2 - auto based on the gpu driver | int | 2 |
 | explicit_sync_kms | Whether to enable explicit sync support for the KMS layer. Requires explicit_sync to be enabled. 0 - no, 1 - yes, 2 - auto based on the gpu driver | int | 2 |
-| direct_scanout | Enables direct scanout. Direct scanout attempts to reduce lag when there is only one fullscreen application on a screen (e.g. game). It is also recommended to set this to false if the fullscreen application shows graphical glitches. | bool | false |
+| direct_scanout | Enables direct scanout. Direct scanout attempts to reduce lag when there is only one fullscreen application on a screen (e.g. game). It is also recommended to set this to false if the fullscreen application shows graphical glitches. 0 - off, 1 - on, 2 - auto (on with content type 'game') | int | 0 |
 | expand_undersized_textures | Whether to expand undersized textures along the edge, or rather stretch the entire texture. | bool | true |
+| xp_mode | Disables back buffer and bottom layer rendering. | bool | false |
+| ctm_animation | Whether to enable a fade animation for CTM changes (hyprsunset). 2 means "auto" which disables them on Nvidia. | int | 2 |
+| cm_fs_passthrough | Passthrough color settings for fullscreen apps when possible. 0 - off, 1 - always, 2 - hdr only | int | 2 |
+| cm_enabled | Whether the color management pipeline should be enabled or not (requires a restart of Hyprland to fully take effect) | bool | true |
 
 ### Cursor
 
 | name | description | type | default |
 | --- | --- | --- | --- |
 | sync_gsettings_theme | sync xcursor theme with gsettings, it applies cursor-theme and cursor-size on theme load to gsettings making most CSD gtk based clients use same xcursor theme and size. | bool | true |
-| no_hardware_cursors | disables hardware cursors. Set to 2 for `auto` which disables them on Nvidia, while keeping them enabled otherwise. | int | 2 |
-| no_break_fs_vrr | disables scheduling new frames on cursor movement for fullscreen apps with VRR enabled to avoid framerate spikes (requires `no_hardware_cursors = true`) | bool | false |
+| no_hardware_cursors | disables hardware cursors. 0 - use hw cursors if possible, 1 - don't use hw cursors, 2 - auto (disable when tearing) | int | 2 |
+| no_break_fs_vrr | disables scheduling new frames on cursor movement for fullscreen apps with VRR enabled to avoid framerate spikes (may require no_hardware_cursors = true) 0 - off, 1 - on, 2 - auto (on with content type 'game') | int | 2 |
 | min_refresh_rate | minimum refresh rate for cursor movement when `no_break_fs_vrr` is active. Set to minimum supported refresh rate or higher | int | 24 |
 | hotspot_padding | the padding, in logical px, between screen edges and the cursor | int | 1 |
 | inactive_timeout | in seconds, after how many seconds of cursor's inactivity to hide it. Set to `0` for never. | float | 0 |
 | no_warps | if true, will not warp the cursor in many cases (focusing, keybinds, etc) | bool | false |
 | persistent_warps | When a window is refocused, the cursor returns to its last position relative to that window, rather than to the centre. | bool | false |
 | warp_on_change_workspace | Move the cursor to the last focused window after changing the workspace. Options: 0 (Disabled), 1 (Enabled), 2 (Force - ignores cursor:no_warps option) | int | 0 |
+| warp_on_toggle_special | Move the cursor to the last focused window when toggling a special workspace. Options: 0 (Disabled), 1 (Enabled), 2 (Force - ignores cursor:no_warps option) | int | 0 |
 | default_monitor | the name of a default monitor for the cursor to be set to on startup (see `hyprctl monitors` for names) | str | [[EMPTY]] |
 | zoom_factor | the factor to zoom by around the cursor. Like a magnifying glass. Minimum 1.0 (meaning no zoom) | float | 1.0 |
 | zoom_rigid | whether the zoom should follow the cursor rigidly (cursor is always centered if it can be) or loosely | bool | false |
 | enable_hyprcursor | whether to enable hyprcursor support | bool | true |
 | hide_on_key_press | Hides the cursor when you press any key until the mouse is moved. | bool | false |
 | hide_on_touch | Hides the cursor when the last input was a touch input until a mouse input is done. | bool | true |
-| use_cpu_buffer | Makes HW cursors use a CPU buffer. Required on Nvidia to have HW cursors. Experimental. | bool | false |
+| use_cpu_buffer | Makes HW cursors use a CPU buffer. Required on Nvidia to have HW cursors. 0 - off, 1 - on, 2 - auto (nvidia only) | int | 2 |
+| warp_back_after_non_mouse_input | Warp the cursor back to where it was after using a non-mouse input to move it, and then returning back to mouse. | bool | false |
 
 ### Ecosystem
 
 | name | description | type | default |
 | --- | --- | --- | --- |
 | no_update_news | disable the popup that shows up when you update hyprland to a new version. | bool | false |
+| no_donation_nag | disable the popup that shows up twice a year encouraging to donate. | bool | false |
+| enforce_permissions | whether to enable [permission control](../Permissions). | bool | false |
+
+### Experimental
+
+| name | description | type | default |
+| --- | --- | --- | --- |
+| xx_color_management_v4 | enable color management protocol | bool | false |
+
+Requires a client with `frog-color-management-v1` or `xx-color-management-v4` support like gamescope or https://github.com/Zamundaaa/VK_hdr_layer
+
+Steam:
+
+`DXVK_HDR=1 gamescope -f --hdr-enabled -- %command%`
+
+`ENABLE_HDR_WSI=1 DXVK_HDR=1 DISPLAY= %command%` (requires wayland-enabled proton version)
+
+Non-steam:
+
+`ENABLE_HDR_WSI=1 DXVK_HDR=1 DISPLAY= wine executable.exe`
+
+Video:
+
+`ENABLE_HDR_WSI=1 mpv --vo=gpu-next --target-colorspace-hint --gpu-api=vulkan --gpu-context=waylandvk "filename"`
+
 
 ### Debug
 
@@ -492,6 +541,8 @@ Only for developers.
 | error_limit | limits the number of displayed config file parsing errors. | int | 5 |
 | error_position | sets the position of the error bar. top - 0, bottom - 1 | int | 0 |
 | colored_stdout_logs | enables colors in the stdout logs. | bool | true |
+| pass | enables render pass debugging. | bool | false |
+| full_cm_proto | claims support for all cm proto features (requires restart) | bool | false |
 
 ### More
 

@@ -8,8 +8,7 @@ for Hyprland.
 
 ## Configuration
 
-Configuration is done via the config file at `~/.config/hypr/hyprlock.conf`. It
-is not required, but recommended. Without it, locking shows the current screen.
+Configuration is done via the config file at `~/.config/hypr/hyprlock.conf`. This file must exist to run `hyprlock`.
 
 ### Variable types
 
@@ -17,7 +16,7 @@ Hyprlock uses the following types in addition to [Hyprland's variable types](../
 
 | type | description |
 | -- | -- |
-| layoutxy | vec2 with an optional `%` suffix, allowing users to specify sizes as percentages of the output size.  |
+| layoutxy | vec2 with an optional `%` suffix, allowing users to specify sizes as percentages of the output size. Floats (e.g. 10.5) are supported, but only have an effect when used with `%`. Raw pixel values will just get rounded. |
 
 ### General
 
@@ -25,25 +24,74 @@ Variables in the `general` category:
 
 | variable | description | type | default |
 | -- | -- | -- | -- |
-| disable_loading_bar | disables the loading bar on the bottom of the screen while hyprlock is booting up. | bool | false |
 | hide_cursor | hides the cursor instead of making it visible | bool | false |
 | grace | the amount of seconds for which the lockscreen will unlock on mouse movement. | int | 0 |
-| no_fade_in | disables the fadein animation | bool | false |
-| no_fade_out | disables the fadeout animation | bool | false |
 | ignore_empty_input | skips validation when no password is provided | bool | false |
 | immediate_render | makes hyprlock immediately start to draw widgets. Backgrounds will render `background:color` until their `background:path` resource is available | bool | false |
-| pam_module | sets the pam module used for authentication. If the module isn't found in `/etc/pam.d`, "su" will be used as a fallback | str | hyprlock |
 | text_trim | sets if the text should be trimmed, useful to avoid trailing newline in commands output | bool | true |
 | fractional_scaling | whether to use fractional scaling. 0 - disabled, 1 - enabled, 2 - auto | int | 2 |
-| enable_fingerprint | enables parallel fingerprint auth with fprintd. | bool | false |
-| fingerprint_ready_message | sets the message that will be displayed when fprintd is ready to scan a fingerprint. | str | (Scan fingerprint to unlock) |
-| fingerprint_present_message | sets the message that will be displayed when a finger is placed on the scanner. | str | Scanning fingerprint |
+| screencopy_mode | selects screencopy mode. 0 - gpu accelerated, 1 - cpu based (slow) | int | 0 |
+| fail_timeout | milliseconds until the ui resets after a failed auth attempt | int | 2000 |
 
-{{< callout type=warning >}}
+### Authentication
 
-If you are not on hyprland, or your `XDG_CURRENT_DESKTOP` is not Hyprland, the fade out will be disabled and the value of your `no_fade_out` variable will be ignored.
+Variables in the `auth` category:
+
+| variable | description | type | default |
+| -- | -- | -- | -- |
+| pam:enabled | whether to enable pam authentication | bool | true |
+| pam:module | sets the pam module used for authentication. If the module isn't found in `/etc/pam.d`, "su" will be used as a fallback | str | hyprlock |
+| fingerprint:enabled | enables parallel fingerprint auth with fprintd. | bool | false |
+| fingerprint:ready_message | sets the message that will be displayed when fprintd is ready to scan a fingerprint. | str | (Scan fingerprint to unlock) |
+| fingerprint:present_message | sets the message that will be displayed when a finger is placed on the scanner. | str | Scanning fingerprint |
+| fingerprint:retry_delay | sets the delay in ms after an unrecognized finger is scanned before another finger can be scanned. | int | 250 |
+
+{{< callout type=info >}}
+
+At least one enabled authentication method is required.
 
 {{< /callout >}}
+
+### Animations
+
+Variables in the `animations` category:
+
+| variable | description | type | default |
+| -- | -- | -- | -- |
+| enabled | whether to enable animations | bool | true |
+
+#### Keywords
+
+The `animation` and `bezier` keywords can be used just like in `hyprland.conf`.
+
+For Example:
+```ini
+bezier = linear, 1, 1, 0, 0
+animation = fade, 1, 1.8, linear
+```
+
+Available animations can be found in the [animation tree](#animation-tree).
+The optional `STYLE` parameter for the `animation` keyword is currently unused by hyprlock.
+
+Check out Hyprland's [animation documentation](../../Configuring/Animations) for more information.
+
+#### Animation tree
+
+```txt
+global
+  ↳ fade
+    ↳ fadeIn - fade to lockscreen
+    ↳ fadeOut - fade back to the wayland session
+  ↳ inputField
+    ↳ inputFieldColors - fade between colors and gradients
+    ↳ inputFieldFade - fade_on_empty animation
+    ↳ inputFieldWidth - adaptive width animation
+    ↳ inputFieldDots - fade in/out for individual dots in the input field
+```
+
+### System Configuration
+
+On Arch Linux, by default, hyprlock integrates with [pambase](https://archlinux.org/packages/?name=pambase) through `pam_faillock.so`, which forces a 10 minute timeout after 3 failed unlocks. If you would like to change this, refer to the [arch linux wiki](https://wiki.archlinux.org/title/Security#Lock_out_user_after_three_failed_login_attempts) and update the file `/etc/security/faillock.conf` file with parameters `unlock_time`, `fail_interval`, and `deny` as needed.
 
 ## Keyboard Shortcuts and Actions
 
@@ -66,7 +114,28 @@ widget_name {
 }
 ```
 
-`monitor` can be left empty for "all monitors"
+### Monitor selection
+`monitor` is available for all widgets and can be left empty for "all monitors".
+
+It takes the same string that is used reference monitors in the hyprland configuration.
+So either use the portname (e.g. `eDP-1`) or the monitor description (e.g. `desc:Chimei Innolux Corporation 0x150C`).
+
+See [Monitors](../../Configuring/Monitors).
+
+### Variable substitution
+The following variables in widget text options will be substituted.
+
+- `$USER` - username (e.g. linux-user)
+- `$DESC` - user description (e.g. Linux User)
+- `$TIME` - current time in 24-hour format (e.g. `13:37`)
+- `$TIME12` - current time in 12-hour format (e.g. `1:37 PM`)
+- `$LAYOUT` - current keyboard layout
+- `$ATTEMPTS` - failed authentication attempts
+- `$FAIL` - last authentication fail reason
+- `$PAMPROMPT` - pam auth last prompt
+- `$PAMFAIL` - pam auth last fail reason
+- `$FPRINTPROMPT` - fingerprint auth last prompt
+- `$FPRINTFAIL` - fingerprint auth last fail reason
 
 ## Widget List
 
@@ -84,7 +153,7 @@ widget_name {
   - zindex: Widgets with larger numbers will be placed above widgets with smaller numbers. All widgets default to 0, except background which defaults to -1.
 - All `position` and `size` options can be specified in pixels or as percentages of the output size.
   - pixels: `10, 10` or `10px, 10px`
-  - percentages: `10%, 10%`
+  - percentages: `10%, 10.5%`
   - mixed: `10%, 5px`
 - Supported image formats are png, jpg and webp (no animations though)
 
@@ -120,6 +189,9 @@ If `path` is `screenshot`, a screenshot of your desktop at launch will be used.
 | brightness | brightness modulation for blur | float | 0.8172 |
 | vibrancy | Increase saturation of blurred colors | float | 0.1696 |
 | vibrancy_darkness | How strong the effect of vibrancy is on dark areas | float | 0.05 |
+| reload_time | seconds between reloading, 0 to reload with SIGUSR2. Ignored if `path` is `screenshot`. | int | -1 |
+| reload_cmd | command to get new path. If empty, old path will be used. | str | [[Empty]] |
+| crossfade_time | cross-fade time in seconds between old and new background on reload. A negative value means no cross-fade. | float | -1.0 |
 | zindex | z-index of the widget | int | -1 |
 
 {{< callout type=info >}}
@@ -239,7 +311,6 @@ Draws a password input field.
 | dots_spacing | spacing between dots. [-1.0 - 1.0] | float | 0.15 |
 | dots_center | whether to center the dots. align left otherwise  | bool | true |
 | dots_rounding | rounding of the dots | int | -1 |
-| dots_fade_time | Milliseconds until a dot fully fades in | int | 200 |
 | dots_text_format | text character(s) used for the input indicator, rounded rectangles are the default. | str | [[Empty]] |
 | outer_color | border color | gradient | rgba(17, 17, 17, 1.0) |
 | inner_color | color of the inner box | color | rgba(200, 200, 200, 1.0) |
@@ -249,12 +320,11 @@ Draws a password input field.
 | fade_timeout | milliseconds before `fade_on_empty` is triggered | int | 2000 |
 | placeholder_text | text rendered in the input box when it's empty | str | `<i>Input Password...</i>` |
 | hide_input | render an input indicator similar to swaylock instead of dots when set to true | bool | false |
+| hide_input_base_color | this color's hue is randomly rotated (oklab color space) to get colors for `hide_input` | color | rgba(153, 170, 187) |
 | rounding | -1 means complete rounding (circle/oval) | int | -1 |
 | check_color | color accent when waiting for the authentication result | gradient | rgba(204, 136, 34, 1.0) |
 | fail_color | color accent when authentication fails | gradient | rgba(204, 34, 34, 1.0) |
 | fail_text | text rendered when authentication fails | str | `<i>$FAIL <b>($ATTEMPTS)</b></i>` |
-| fail_timeout | milliseconds before `fail_text` and `fail_color` disappears | int | 2000 |
-| fail_transition | transition time in ms between normal `outer_color` and `fail_color` | int | 300 |
 | capslock_color | color accent when capslock is active | gradient | [[Empty]] |
 | numlock_color | color accent when numlock is active | gradient | [[Empty]] |
 | bothlock_color | color accent when both locks are active | gradient | [[Empty]] |
@@ -279,14 +349,7 @@ Behaviour of `swap_font_color` is as follows:
 
 {{< /callout >}}
 
-Available variables for `placeholder_text`:
-
-- `$PROMPT` - prompt text provided by pam. Usually this will be "Password: ", but it depends on your pam configuration.
-
-Available variables for `fail_text`:
-
-- `$FAIL` - pam fail reason
-- `$ATTEMPTS` - number of failed authentication attempts
+`placeholder_text` and `fail_text` both support [variable substitution](#variable-substitution).
 
 {{% details title="Example input-field" closed="true" %}}
 
@@ -331,19 +394,10 @@ Draws a label.
 | halign | horizontal alignment | str | center |
 | valign | vertical alignment | str | center |
 
-Available variables for `text`:
 
-- `$USER` - username (e.g. linux-user)
-- `$DESC` - user description (e.g. Linux User)
-- `$TIME` - current time in 24-hour format (e.g. `13:37`)
-- `$TIME12` - current time in 12-hour format (e.g. `1:37 PM`)
-- `$PROMPT` - last pam prompt
-- `$FAIL` - last pam fail reason
-- `$ATTEMPTS` - failed attempts
-- `$LAYOUT` - current keyboard layout
-- `$FPRINTMESSAGE` - last message from fingerprint matching
+#### Dynamic labels
 
-`text` also supports launching commands, for example:
+The `text` option supports [variable substitution](#variable-substitution) and launching shell commands. For example:
 
 ```ini
 text = cmd[update:1000] echo "<span foreground='##ff2222'>$(date)</span>"
@@ -355,6 +409,7 @@ Worth noting:
 - label can be forcefully updated by specifying `update:<time>:1` or `update:<time>:true` and sending `SIGUSR2` to hyprlock. `<time>` can be `0` in this case.
 - `$ATTEMPTS[<string>]` format can be used to show `<string>` when there are no failed attempts. You can use pango-markup here. `<string>` can be empty to hide.
 - `$LAYOUT[<str0>,<str1>,...]` format is available to replace indexed layouts. You can use settings from `hyprland.conf`, e.g. `$LAYOUT[en,ru,de]`. Also, single `!` character will hide layout. E.g. `$LAYOUT[!]` will hide default (0 indexed) and show others.
+- `$TIME` and `$TIME12` will use timezone from TZ environment variable. If it's not set, system timezone will be used, falling back to UTC in case of errors.
 - Variables seen above are parsed _before_ the command is ran.
 - **do not** run commands that never exit. This will hang the AsyncResourceGatherer and you won't have a good time.
 

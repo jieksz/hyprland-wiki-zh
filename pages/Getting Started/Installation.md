@@ -40,14 +40,19 @@ might have **major** issues running Hyprland.
 
 ## Installation
 
-Installing Hyprland is very easy. Simply install it with your package manager
-(if there is a Hyprland package available) or install/build it yourself.
+Installing Hyprland is very easy. Simply install it with your package manager.
 
-{{< callout >}}
+{{< callout type=warning >}}
 
-This project is under development and is constantly changing. If you want to
-keep up to date with the latest commits, please consider updating your packages
-with `yay -Syu --devel`, or your preferred package manager.
+It is **heavily** recommended you use **what the distro packages for you**, and **not** compiling manually
+or using `-git` packages.
+Hyprland's ecosystem and dependencies change often, and compiling manually will only potentially expose you to outdated,
+or incompatible versions of these dependencies.
+
+If you get `.so` file mismatch / missing errors, it's _entirely your fault_ for doing this!
+
+However, if you are an experienced user and want to beta-test new features, you're more than welcome to run the latest
+git head. Please don't come asking about ".so file missing" errors though!
 
 {{< /callout >}}
 
@@ -58,16 +63,16 @@ from source first.
 
 {{% details title="Arch" closed="true" %}}
 
-Install from the AUR, which compiles the latest source:
-
-```shell
-yay -S hyprland-git
-```
-
-or a tagged release from the arch packages:
+Install a tagged release from the arch packages:
 
 ```shell
 sudo pacman -S hyprland
+```
+
+or install from the AUR, which compiles the latest source:
+
+```shell
+yay -S hyprland-git
 ```
 
 Alternatively, install the `hyprland-meta` package to automatically fetch and compile the latest git versions of all components within the hypr* ecosystem.
@@ -121,7 +126,7 @@ Hyprland needs are too old._
 
 {{% details title="Fedora*" closed="true" %}}
 
-On Fedora 39+, run:
+On Fedora 40+, run:
 
 ```sh
 sudo dnf install hyprland
@@ -218,7 +223,7 @@ NOTE: Above is for Ubuntu 24.10 (Unreleased) version
 For installing Hyprland from Source, install first the dependencies below:
 
 ```bash
-sudo apt-get install -y meson wget build-essential ninja-build cmake-extras cmake gettext gettext-base fontconfig libfontconfig-dev libffi-dev libxml2-dev libdrm-dev libxkbcommon-x11-dev libxkbregistry-dev libxkbcommon-dev libpixman-1-dev libudev-dev libseat-dev seatd libxcb-dri3-dev libegl-dev libgles2 libegl1-mesa-dev glslang-tools libinput-bin libinput-dev libxcb-composite0-dev libavutil-dev libavcodec-dev libavformat-dev libxcb-ewmh2 libxcb-ewmh-dev libxcb-present-dev libxcb-icccm4-dev libxcb-render-util0-dev libxcb-res0-dev libxcb-xinput-dev libtomlplusplus3
+sudo apt install -y meson wget build-essential ninja-build cmake-extras cmake gettext gettext-base fontconfig libfontconfig-dev libffi-dev libxml2-dev libdrm-dev libxkbcommon-x11-dev libxkbregistry-dev libxkbcommon-dev libpixman-1-dev libudev-dev libseat-dev seatd libxcb-dri3-dev libegl-dev libgles2 libegl1-mesa-dev glslang-tools libinput-bin libinput-dev libxcb-composite0-dev libavutil-dev libavcodec-dev libavformat-dev libxcb-ewmh2 libxcb-ewmh-dev libxcb-present-dev libxcb-icccm4-dev libxcb-render-util0-dev libxcb-res0-dev libxcb-xinput-dev libtomlplusplus3 libre2-dev
 ```
 
 You will also need to build the latest wayland, wayland-protocols, and
@@ -227,7 +232,7 @@ libdisplay-info tagged releases from source.
 For screensharing, you can also install `xdg-desktop-portal-wlr` or `xdg-desktop-portal-hyprland`
 
 ```bash
-sudo apt-get install -y xdg-desktop-portal-wlr
+sudo apt install -y xdg-desktop-portal-wlr
 ```
 
 _Unfortunately, `xdg-desktop-portal-hyprland` still not in Ubuntu Repo so you have to build it from source_
@@ -262,7 +267,7 @@ Refer to the gist if anything fails.
 {{% details title="Void Linux*" closed="true" %}}
 
 Hyprland is not available from Void Linux's official repositories
-[due to a conflict of packaging philosophy](https://github.com/void-linux/void-packages/issues/37544).
+due to the void developers being salty and personally disliking our main developer.
 However, a [third party repository](https://github.com/Makrennel/hyprland-void)
 is available with
 [binary packages](https://github.com/Makrennel/hyprland-void/tree/repository-x86_64-glibc)
@@ -308,15 +313,10 @@ For detailed instructions on installing this build see
 
 {{% details title="Alpine*" closed="true" %}}
 
-Hyprland is available in Alpine's [testing repository](https://wiki.alpinelinux.org/wiki/Repositories#Testing) which can be enabled in `/etc/apk/repositories` by adding
+Hyprland is currently available in Alpine's [community repository](https://wiki.alpinelinux.org/wiki/Repositories#Community)
+and it is maintaned by the community.
 
-```plain {filename="/etc/apk/repositories"}
-http://dl-cdn.alpinelinux.org/alpine/edge/testing
-```
-
-This will only work on Alpine linux edge, not on any stable release. For use on stable releases, see the [Alpine wiki](https://wiki.alpinelinux.org/wiki/Repositories#Using_the_testing_repository_on_stable_branches)
-
-After enabling the repository, the following command will install hyprland and its dependencies.
+The following command will install hyprland and its dependencies.
 
 ```plain
 apk add hyprland
@@ -363,19 +363,7 @@ sudo eopkg install hyprland
 _**\* Unofficial, no official support is provided. These instructions are
 community-driven, and no guarantee is provided for their validity.**_
 
-### Manual (Releases, Linux-only)
-
-1. Download the most recent release.
-2. copy the binaries (Hyprland, hyprctl, hyprpm) to `/usr/bin/`.
-3. copy the desktop entry (`example/hyprland.desktop`) to
-   `/usr/share/wayland-sessions/`
-
-the example config is in `example/hyprland.conf`.
-
-For updating later on, you can overwrite the binaries (Hyprland, hyprctl,
-hyprpm) . You don't need to update anything else.
-
-### Manual (Manual Build)
+### Manual
 
 Dependencies:
 
@@ -389,7 +377,7 @@ C++ standard library has to support that (`gcc>=14` or `clang>=18`).
 {{% details title="Arch" closed="true" %}}
 
 ```plain
-yay -S ninja gcc cmake meson libxcb xcb-proto xcb-util xcb-util-keysyms libxfixes libx11 libxcomposite libxrender pixman wayland-protocols cairo pango seatd libxkbcommon xcb-util-wm xorg-xwayland libinput libliftoff libdisplay-info cpio tomlplusplus hyprlang-git hyprcursor-git hyprwayland-scanner-git xcb-util-errors hyprutils-git hyprgraphics-git
+yay -S ninja gcc cmake meson libxcb xcb-proto xcb-util xcb-util-keysyms libxfixes libx11 libxcomposite libxrender libxcursor pixman wayland-protocols cairo pango libxkbcommon xcb-util-wm xorg-xwayland libinput libliftoff libdisplay-info cpio tomlplusplus hyprlang-git hyprcursor-git hyprwayland-scanner-git xcb-util-errors hyprutils-git glaze hyprgraphics-git aquamarine-git re2 hyprland-qtutils
 ```
 
 _(Please make a pull request or open an issue if any packages are missing from
@@ -458,6 +446,8 @@ ninja -C build
 ninja -C build install --tags runtime,man
 ```
 
+Custom build flags can be found in [`meson_options.txt`](https://github.com/hyprwm/Hyprland/blob/main/meson_options.txt).
+
 Refer to [Debugging](../../Contributing-and-Debugging) to see how to build &
 debug.
 
@@ -492,18 +482,20 @@ make <PRESET> && sudo cp ./build/Hyprland /usr/bin && sudo cp ./example/hyprland
 
 To apply custom build flags, you'll have to ditch make.
 
-Supported custom build flags:
+Supported custom build flags on CMake:
 
 ```bash
 LEGACY_RENDERER - Compiles with the legacy renderer (see above)
 NO_XWAYLAND - Removes XWayland support
 NO_SYSTEMD - Removes systemd dependencies
+NO_UWSM - Does not install the hyprland-uwsm.desktop file
+NO_HYPRPM - Does not build and install hyprpm
 ```
 
 Flags can be passed to CMake like this:
 
 ```bash
-cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -D<FLAG>:STRING=true -B build -G Ninja
+cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -D<FLAG>:STRING=true -B build
 ```
 
 Change `<FLAG>` to one of the custom build flags. Multiple flags can be used at
@@ -514,7 +506,7 @@ The `BUILD_TYPE` can also be changed to `Debug`.
 To build, run:
 
 ```bash
-cmake --build ./build --config Release --target all
+cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
 ```
 
 If you configured in `Debug`, change the `--config` to `Debug` as well.

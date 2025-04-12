@@ -5,6 +5,8 @@ title: Crashes and Bugs
 
 ## Getting the log
 
+Firstly, make sure you have enabled logs in the Hyprland config. Set `debug:disable_logs` to `false`.
+
 If you are in a TTY, and the Hyprland session that crashed was the last one you
 launched, the log can be printed with
 
@@ -159,7 +161,7 @@ Please note, these logs are EXTREMELY verbose. Please reproduce your bug(s) ASAP
 {{< /callout >}}
 
 ```sh
-echo 0x19F | sudo tee /sys/module/drm/parameters/debug  # cnables verbose drm logging
+echo 0x19F | sudo tee /sys/module/drm/parameters/debug  # enables verbose drm logging
 sudo dmesg -C                                           # clears kernel debug logs
 dmesg -w > ~/dmesg.log &                                # writes kernel logs in the background to a file at ~/dmesg.log
 Hyprland

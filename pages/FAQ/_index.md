@@ -91,13 +91,13 @@ workarounds.
 
 ```ini
 # noanim isn't necessary but animations with these rules might look bad. use at your own discretion.
-windowrulev2 = noanim, class:^(flameshot)$
-windowrulev2 = float, class:^(flameshot)$
-windowrulev2 = move 0 0, class:^(flameshot)$
-windowrulev2 = pin, class:^(flameshot)$
+windowrule = noanim, class:^(flameshot)$
+windowrule = float, class:^(flameshot)$
+windowrule = move 0 0, class:^(flameshot)$
+windowrule = pin, class:^(flameshot)$
 # set this to your leftmost monitor id, otherwise you have to move your cursor to the leftmost monitor
 # before executing flameshot
-windowrulev2 = monitor 1, class:^(flameshot)$
+windowrule = monitor 1, class:^(flameshot)$
 
 # ctrl-c to copy from the flameshot gui gives warped images sometimes, but
 # setting the env fixes it
@@ -302,9 +302,9 @@ these window rules to your config to make these programs work with both of your
 screens.
 
 ```ini
-windowrulev2 = float,title:^(flameshot)
-windowrulev2 = move 0 0,title:^(flameshot)
-windowrulev2 = suppressevent fullscreen,title:^(flameshot)
+windowrule2 = float,title:^(flameshot)
+windowrule = move 0 0,title:^(flameshot)
+windowrule = suppressevent fullscreen,title:^(flameshot)
 ```
 
 ### I cannot bind SUPER as my mod key on my laptop
@@ -358,7 +358,7 @@ Window 55d794495400 -> :
 If the pop-up disappears as you hover over it, you can add to your config:
 
 ```ini
-windowrulev2 = stayfocused, title:^(TITLE)$, class:^(CLASS)$
+windowrule = stayfocused, title:^(TITLE)$, class:^(CLASS)$
 ```
 
 This has a downside of not being able to click on anything in the main UI until
@@ -367,13 +367,13 @@ you've interacted with the pop-up.
 If the pop-up disappears immediately, you can use:
 
 ```ini
-windowrulev2 = minsize 1 1, title:^(TITLE)$, class:^(CLASS)$
+windowrule = minsize 1 1, title:^(TITLE)$, class:^(CLASS)$
 ```
 
 If the pop-up doesn't open at the cursor position, try the following:
 
 ```ini
-windowrulev2 = move onscreen cursor, title:^(TITLE)$, class:^(CLASS)$
+windowrule = move onscreen cursor, title:^(TITLE)$, class:^(CLASS)$
 ```
 
 This is required for apps running under xwayland only and there is usually no need
@@ -435,3 +435,17 @@ This is a side effect of the [decoration:blur:new_optimizations](../Configuring/
 You have two options to resolve it.
 1. Set `decoration:blur:new_optimizations` to `false` - This will preserve the exact same appearance, but may have a slight performance cost.
 2. Set `decoration:blur:ignore_opacity` to `false` - This will drastically affect the appearance, but should maintain the original performance.
+
+### I can't create Discord binds
+
+You most likely have `env = ELECTRON_OZONE_PLATFORM_HINT, wayland` in your config.
+
+Try running Discord like this `ELECTRON_OZONE_PLATFORM_HINT= discord`.
+
+{{< callout >}}
+
+Keep in mind that this will run Discord under XWayland.
+
+{{< /callout >}}
+
+If it works, navigate to the Discord desktop entry (usually located in `/usr/share/applications/`). Duplicate it and replace `Exec=/usr/bin/discord` with `Exec=env ELECTRON_OZONE_PLATFORM_HINT= /usr/bin/discord`. You can also give it a new name, e.g. `Name=DiscordX`, to avoid confusion as to which is which.

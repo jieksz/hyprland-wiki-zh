@@ -14,11 +14,27 @@ ML4W or My Linux 4 Work, is a great DE-like experience out-of-the-box made by St
 
 It includes simple gui settings apps, pre-configured feature-rich panels, a welcome app, and more.
 
+[Website](https://www.ml4w.com/)
+
 [GitHub](https://github.com/mylinuxforwork/dotfiles)
 
 [Youtube](https://www.youtube.com/@mylinuxforwork)
 
-![Image of ML4W dotfiles](https://i.ibb.co/6ydHNt9/screenshot-29-1.png)
+![Image of ML4W dotfiles](https://i.ibb.co/7rxTRrw/395854121-47ed1ae0-a660-46f3-9bf5-917da0d3f675.png)
+
+## JaKooLit
+
+Another great option is installing JaKooLit's dotfiles. They are another feature-rich and very well
+maintained option.
+
+JaKooLit provides installation scripts for many distros for their dotfiles, with
+many themes to choose from.
+
+[GitHub](https://github.com/JaKooLit/Hyprland-Dots)
+
+[Youtube](https://www.youtube.com/@Ja.KooLit)
+
+![Image of JaKooLit's dotfiles](https://i.ibb.co/7tMsnTv/default-waybar.png)
 
 ## end_4
 
@@ -28,11 +44,11 @@ Like material styling? Want a lot of great apps? Don't mind a tiny bit of tinker
 
 ![Image of end-4's dotfiles](https://github.com/end-4/dots-hyprland/assets/97237370/5e081770-0f1e-45c4-ad9c-3d19f488cd85)
 
-## prasanthrangan
+## HyDE
 
 Prefer something more minimal, clean and aesthetic? Are you a terminal enjoyer?
-Prasanthrangan's dotfiles are a very popular choice that will suit your needs.
+Prasanthrangan's HyDE dotfiles are a very popular choice that will suit your needs.
 
-[GitHub](https://github.com/prasanthrangan/hyprdots)
+[GitHub](https://github.com/HyDE-Project/HyDE)
 
-![Image of prasanthrangan's dotfiles](https://i.ibb.co/W3SYJCc/showcase-2-2412602747.png)
+![Image of HyDE dotfiles](https://i.ibb.co/W3SYJCc/showcase-2-2412602747.png)

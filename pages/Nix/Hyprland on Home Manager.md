@@ -9,8 +9,8 @@ For a list of available options, check the
 
 - _**(Required)** NixOS Module_: enables critical components needed to run
   Hyprland properly.
-  - _Without this, you may have issues with XDG Portals, or missing session
-    files in your Display Manager._
+  - _Without this, you may have issues with missing session files in your
+    Display Manager._
 - _(Optional) Home Manager module_: lets you configure Hyprland declaratively
   through Home Manager.
   - _This module configures Hyprland and adds it to your user's `$PATH`, but
@@ -69,6 +69,7 @@ Don't forget to replace `user@hostname` with your username and hostname!
             enable = true;
             # set the flake package
             package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+            portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
           };
         }
         # ...
@@ -106,6 +107,7 @@ in {
     enable = true;
     # set the flake package
     package = hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    portalPackage = hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
   }
 }
 ```
@@ -189,7 +191,7 @@ Example configuration:
     };
 
     iconTheme = {
-      package = pkgs.gnome.adwaita-icon-theme;
+      package = pkgs.adwaita-icon-theme;
       name = "Adwaita";
     };
 
@@ -200,6 +202,26 @@ Example configuration:
   };
 }
 ```
+
+### Using the Home-Manager module with NixOS
+
+If you want to use the Home Manager module while using the Hyprland package you've
+defined in your NixOS module, you can now do so as long as you're running
+[Home Manager `5dc1c2e40410f7dabef3ba8bf4fdb3145eae3ceb`](https://github.com/nix-community/home-manager/commit/5dc1c2e40410f7dabef3ba8bf4fdb3145eae3ceb)
+or later by setting your `package` and `portalPackage` to `null`.
+
+```nix {filename="home.nix"}
+wayland.windowManager.hyprland = {
+  enable = true;
+  # set the Hyprland and XDPH packages to null to use the ones from the NixOS module
+  package = null;
+  portalPackage = null;
+};
+```
+
+Make sure **not** to mix versions of Hyprland and XDPH.
+If your NixOS config uses Hyprland from the flake, you should also use XDPH from the flake.
+If you set the Home Manager Hyprland module package to `null`, you should also set the XDPH package to `null`.
 
 ### Programs don't work in systemd services, but do on the terminal
 
